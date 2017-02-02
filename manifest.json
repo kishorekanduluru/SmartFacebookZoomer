@@ -1,0 +1,65 @@
+{
+    "name":"Hover Zoom",
+    "version":"5.24",
+    "description":"__MSG_extDescription__",
+    "manifest_version":2,
+    "homepage_url": "http://hoverzoom.net/",
+    "icons":{
+        "16":"images/icon16.png",
+        "32":"images/icon32.png",
+        "48":"images/icon48.png",
+        "128":"images/icon128.png"
+    },
+    "default_locale":"en",
+    "minimum_chrome_version":"21",
+    "background":{
+        "page":"html/background.html"
+    },
+    "options_page":"html/options.html",
+    "page_action":{
+        "default_icon":"images/icon19.png",
+        "default_popup":"html/popup.html",
+        "default_title":"Hover Zoom"
+    },
+    "permissions":[
+        "tabs",
+        "webRequest",
+        "webRequestBlocking",
+        "*://*/*",
+        "cookies",
+        "history",
+        "notifications",
+        "webNavigation", 
+        "storage",
+        "unlimitedStorage"
+    ],
+    "content_security_policy":"script-src 'self' https://apis.google.com https://www.google-analytics.com; object-src 'self'",
+    "web_accessible_resources":[
+        "images/loading.gif",
+        "images/wm-gallery.png",
+        "images/icon16.png",
+        "images/white.png",
+        "js/jquery.min.js",
+        "js/jquery-ui.min.js",
+        "js/common.js",
+        "js/options.js",
+        "js/g-plusone.js"
+    ],
+    "content_scripts":[
+        {
+            "js":["js/tools.js", "js/jquery.min.js", "plugins/default.js"],
+            "matches":["<all_urls>"],
+            "all_frames":true
+        },
+        {
+            "js":["plugins/facebook.js"],
+            "matches":["*://*.facebook.com/*"],
+            "all_frames":true
+        },
+          {
+            "js":["js/hoverzoom.js"],
+            "matches":["<all_urls>"],
+            "all_frames":true
+        }
+   ]
+}
