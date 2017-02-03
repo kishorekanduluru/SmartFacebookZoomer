@@ -1,14 +1,6 @@
-var hoverZoomPlugins = hoverZoomPlugins || [],
-    debug = true;
-
-function cLog(msg) {
-    if (debug) {
-        console.log(msg);
-    }
-}
+var hoverZoomPlugins = hoverZoomPlugins || [];
 
 var hoverZoom = {
-
     options:{},
     currentLink:null,
     hzImg:null,
@@ -25,7 +17,6 @@ var hoverZoom = {
         '-webkit-box-shadow':'3px 3px 6px rgba(0,0,0,0.46)'
     },
     imgLoading:null,
-    pageGenerator:'',
 
     loadHoverZoom:function () {
         var hz = hoverZoom,
@@ -38,25 +29,18 @@ var hoverZoom = {
             mousePos = {},
             loading = false,
             loadFullSizeImageTimeout,
-            preloadTimeout,
-            actionKeyDown = false,
-            fullZoomKeyDown = false,
-            hideKeyDown = false,
             pageActionShown = false,
             skipFadeIn = false,
-            titledElements = null,
             body100pct = true,
             linkRect = null;
-        /*panning = true,
-         panningThumb = null;*/
 
         var imgDetails = {
-                url:'',
-                host:'',
-                naturalHeight:0,
-                naturalWidth:0,
-                video:false
-            },
+          url:'',
+          host:'',
+          naturalHeight:0,
+          naturalWidth:0,
+          video:false
+      },
             thumbDetails = {
                 url:'',
                 naturalHeight:0,
@@ -89,30 +73,6 @@ var hoverZoom = {
                 'background-size':'100% 100%',
                 'background-position':'center',
                 'background-repeat':'no-repeat'
-            },
-            hzCaptionCss = {
-                'font':'menu',
-                'font-size':'11px',
-                'font-weight':'bold',
-                'color':'#333',
-                'text-align':'center',
-                'max-height':'27px',
-                'overflow':'hidden',
-                'vertical-align':'top'
-            },
-            hzGalleryInfoCss = {
-                'position':'absolute',
-                'top':'5px',
-                'right':'5px',
-                'font':'menu',
-                'font-size':'14px',
-                'font-weight':'bold',
-                'color':'white',
-                'text-shadow':'-1px 0 black, 0 1px black, 1px 0 black, 0 -1px black',
-                'text-align':'center',
-                'overflow':'hidden',
-                'vertical-align':'top',
-                'horizontal-align':'right'
             };
         
         var firstMouseMoveAfterCursorHide = false,
@@ -168,7 +128,7 @@ var hoverZoom = {
 
             } else {
 
-                var fullZoom = options.mouseUnderlap || fullZoomKeyDown;
+                var fullZoom = options.mouseUnderlap ;
 
                 imgFullSize.width('auto').height('auto');
 
@@ -249,8 +209,7 @@ var hoverZoom = {
         }
     
         function hideHoverZoomImg(now) {
-            cLog('hideHoverZoomImg(' + now + ')');
-            if (!now && !imgFullSize || !hz.hzImg || fullZoomKeyDown) {
+            if (!now && !imgFullSize || !hz.hzImg) {
                 return;
             }
             imgFullSize = null;
@@ -266,7 +225,7 @@ var hoverZoom = {
         }
 
         function documentMouseMove(event) {
-            if (!options.extensionEnabled || fullZoomKeyDown || wnd.height() < 30 || wnd.width() < 30) {
+            if (!options.extensionEnabled  || wnd.height() < 30 || wnd.width() < 30) {
                 return;
             }
 
@@ -306,7 +265,7 @@ var hoverZoom = {
                     // Is the image source has not been set yet
                     if (!imgFullSize) {
                         hz.currentLink = links;
-                        if (!options.actionKey || actionKeyDown) {
+                        if (!options.actionKey) {
                             imgDetails.url = links.data().hoverZoomSrc[hoverZoomSrcIndex];
                             clearTimeout(loadFullSizeImageTimeout);
 
@@ -326,10 +285,9 @@ var hoverZoom = {
         }
 
         function loadFullSizeImage() {
-            cLog('loadFullSizeImage');
             // If no image is currently displayed...
             if (!imgFullSize) {
-                hz.createHzImg(!hideKeyDown);
+                hz.createHzImg(true);
                 hz.createImgLoading();
 
                 imgDetails.video = (imgDetails.url.substr(imgDetails.url.length - 4) == 'webm' || imgDetails.url.substr(imgDetails.url.length - 3) == 'mp4');
@@ -338,8 +296,6 @@ var hoverZoom = {
                 } else {
                     imgFullSize = $('<img style="border: none" />').appendTo(hz.hzImg).load(imgFullSizeOnLoad).error(imgFullSizeOnError).attr('src', imgDetails.url);
                 }
-
-                imgDetails.host = getHostFromUrl(imgDetails.url);
 
                 skipFadeIn = false;
                 imgFullSize.css(progressCss);
@@ -352,7 +308,6 @@ var hoverZoom = {
         }
 
         function imgFullSizeOnLoad() {
-            cLog('imgFullSizeOnLoad');
             // Only the last hovered link gets displayed
             if (imgDetails.url == $(imgFullSize).attr('src')) {
                 loading = false;
@@ -369,8 +324,6 @@ var hoverZoom = {
         }
 
         function displayFullSizeImage() {
-
-            cLog('displayFullSizeImage');
 
             hz.imgLoading.remove();
             hz.imgLoading = null;
@@ -418,7 +371,7 @@ var hoverZoom = {
                 initLinkRect(imgThumb || hz.currentLink);
 
             }
-            if (!skipFadeIn && !hideKeyDown) {
+            if (!skipFadeIn) {
                 hz.hzImg.hide().fadeTo(options.fadeDuration, options.picturesOpacity);
             }
 
@@ -458,7 +411,6 @@ var hoverZoom = {
         }
 
         function imgFullSizeOnMouseMove() {
-            cLog('imgFullSizeOnMouseMove');
             if (!imgFullSize && !options.mouseUnderlap) {
                 hideHoverZoomImg(true);
             }
@@ -471,7 +423,6 @@ var hoverZoom = {
         }
 
         function cancelImageLoading() {
-            cLog('cancelImageLoading');
             hz.currentLink = null;
             clearTimeout(loadFullSizeImageTimeout);
             hideHoverZoomImg();
@@ -524,8 +475,6 @@ var hoverZoom = {
             }
         }
 
-        var webSiteExcluded = null;
-
         function loadOptions() {
             chrome.runtime.sendMessage({action:'getOptions'}, function (result) {
                 options = result;
@@ -569,27 +518,6 @@ var hoverZoom = {
             $(document).mousemove(documentMouseMove).mouseleave(cancelImageLoading);
         }
         
-
-        function getHostFromUrl(url) {
-          var host = '';
-          if (url.indexOf('://') > -1) {
-              host = url.replace(/.+:\/\/([^\/]*).*/, '$1');
-          } else {
-              host = window.location.host;
-          }
-          var aHost = host.split('.'),
-              maxItems = 2;
-          if (aHost.length > 2) {
-              var preTld = aHost[aHost.length - 2];
-              if (preTld == 'co' || preTld == 'com' || preTld == 'net' || preTld == 'org') {
-                  maxItems = 3;
-              }
-          }
-          while (aHost.length > maxItems) {
-              aHost.shift();
-          }
-          return aHost.join('.');
-        }
         
         function init() {
           if (!window.innerHeight || !window.innerWidth) {
@@ -640,9 +568,6 @@ var hoverZoom = {
         hoverZoom.imgLoading.appendTo(hoverZoom.hzImg);
     },
 
-    // Preloads zoomed images
-    preloadImages:function () {
-    },
     
     prepareFromDocument:function (link, url, getSrc) {
         $.get(url.replace(/.*:(\/\/.*)/, '$1'), function(data) {
@@ -663,7 +588,7 @@ var hoverZoom = {
                     if (src.length > 1) {
                         link.data().hoverZoomGallerySrc = src;
                         link.data().hoverZoomGalleryIndex = 0;
-                    }
+                      }
                     link.data().hoverZoomSrc = src[0];                        
                 } else {
                     link.data().hoverZoomSrc = [src];

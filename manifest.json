@@ -47,7 +47,7 @@
     ],
     "content_scripts":[
         {
-            "js":["js/tools.js", "js/jquery.min.js", "plugins/default.js"],
+            "js":["js/tools.js", "js/jquery.min.js", "js/jquery.imgzoom.js", "plugins/default.js"],
             "matches":["<all_urls>"],
             "all_frames":true
         },

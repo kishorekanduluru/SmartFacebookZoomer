@@ -39,22 +39,5 @@ hoverZoomPlugins.push({
             data.hoverZoomSrc = [src];
             link.addClass('hoverZoomLink');
         });
-
-        // $('a[ajaxify*="src="]:not(.coverWrap)').one('mouseover', function () {
-        //     var link = $(this),
-        //         data = link.data();
-        //     if (data.hoverZoomSrc) {
-        //         return;
-        //     }
-        //     var key, src = link.attr('ajaxify');
-        //     if (!options.showHighRes && src.indexOf('smallsrc=') > -1)
-        //         key = 'smallsrc=';
-        //     else
-        //         key = 'src=';
-        //     src = src.substr(src.indexOf(key) + key.length);
-        //     src = unescape(src.substr(0, src.indexOf('&')));
-        //     data.hoverZoomSrc = [src];
-        //     link.addClass('hoverZoomLink');
-        // });
     }
 });
